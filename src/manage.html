@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>숏츠 블랙리스트 관리</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      color: #0f0f0f;
+      margin: 0;
+      padding: 32px 20px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .subtitle { color: #777; font-size: 13px; margin: 0 0 24px; }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .card h2 { font-size: 14px; margin: 0 0 12px; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    input[type="text"], input[type="number"] {
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+      outline: none;
+    }
+    input[type="text"] { flex: 1; }
+    input[type="number"] { width: 80px; }
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #555;
+      color: #fff;
+    }
+    button.primary { background: #cc0000; }
+    button:hover { opacity: 0.9; }
+    ul { list-style: none; padding: 0; margin: 12px 0 0; }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid #f0f0f0;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    li .idx { color: #aaa; font-size: 11px; margin-right: 10px; }
+    .delete-btn {
+      background: none;
+      color: #888;
+      border: none;
+      font-size: 15px;
+      padding: 2px 6px;
+    }
+    .delete-btn:hover { color: #cc0000; }
+    .empty-msg { color: #777; font-size: 13px; padding: 16px 0; text-align: center; }
+    .row-right { display: flex; align-items: center; gap: 12px; }
+    .added-at { color: #999; font-size: 12px; white-space: nowrap; }
+    .hint { color: #888; font-size: 12px; margin: 8px 0 0; line-height: 1.6; }
+    .setting-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .count { color: #777; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🚫 숏츠 블랙리스트 관리</h1>
+    <p class="subtitle">등록된 채널을 검색하고 정리할 수 있습니다.</p>
+
+    <div class="card">
+      <h2>채널 추가</h2>
+      <div class="row">
+        <input type="text" id="addInput" placeholder="채널 이름 또는 @핸들 입력..." />
+        <button id="addBtn" class="primary">추가</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>등록된 채널 <span id="count" class="count"></span></h2>
+      <div class="row">
+        <input type="text" id="searchInput" placeholder="검색..." />
+        <select id="sortSelect">
+          <option value="recent">등록일 ↓ (최근순)</option>
+          <option value="oldest">등록일 ↑ (오래된순)</option>
+          <option value="name">이름순</option>
+        </select>
+      </div>
+      <ul id="list"></ul>
+    </div>
+
+    <div class="card">
+      <h2>표시 설정</h2>
+      <div class="row">
+        <label for="recentCountInput">팝업에 표시할 최근 채널 수</label>
+        <input type="number" id="recentCountInput" min="1" max="100" />
+        <button id="saveCountBtn">저장</button>
+        <span id="saveMsg" class="count"></span>
+      </div>
+      <p class="hint">팝업에는 최근 등록한 채널만 표시됩니다. 전체 목록은 이 페이지에서 관리하세요.</p>
+
+      <div class="setting-row" style="margin-top:16px;">
+        <input type="checkbox" id="blockAdsToggle" />
+        <label for="blockAdsToggle">광고 자동 재생 막기</label>
+      </div>
+      <p class="hint">광고를 일시정지하고 안내를 표시합니다. 화면을 클릭하면 재생됩니다. (기본 꺼짐)</p>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="manage.js"></script>
+</body>
+</html>

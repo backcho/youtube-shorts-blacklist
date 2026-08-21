@@ -1,0 +1,13 @@
+{
+  "name": "youtube-shorts-blacklist",
+  "version": "0.1.0",
+  "private": true,
+  "description": "유튜브 숏츠 채널 블랙리스트 크롬 확장",
+  "scripts": {
+    "test": "node tools/test/run-all.js",
+    "deploy": "bash tools/deploy.sh"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  }
+}

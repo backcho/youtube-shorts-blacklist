@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #0f0f0f;
+      font-size: 16px;
+    }
+    .current-channel-box {
+      background: #fff0f0;
+      border: 1px solid #ffccd5;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .current-channel-title {
+      font-size: 11px;
+      color: #888;
+    }
+    .current-channel-name {
+      font-weight: bold;
+      font-size: 13px;
+      color: #d32f2f;
+      word-break: break-all;
+    }
+    .btn-quick-add {
+      background-color: #cc0000;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .btn-quick-add:hover {
+      background-color: #990000;
+    }
+    .input-group {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      font-size: 13px;
+    }
+    button.btn-add {
+      padding: 8px 12px;
+      background-color: #555;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      background: white;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 13px;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .delete-btn:hover {
+      color: #cc0000;
+    }
+    .empty-msg {
+      padding: 15px;
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+    }
+    .list-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #777;
+    }
+    .manage-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #065fd4;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .settings {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .setting-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #0f0f0f;
+      cursor: pointer;
+    }
+    .setting-row input {
+      margin: 0;
+      cursor: pointer;
+    }
+    .setting-desc {
+      margin: 6px 0 0 22px;
+      font-size: 11px;
+      color: #888;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h3>🚫 숏츠 블랙리스트 관리</h3>
+
+  <!-- 현재 재생 중인 채널 감지 영역 -->
+  <div class="current-channel-box">
+    <span class="current-channel-title">현재 재생 중인 채널:</span>
+    <span id="currentChannelText" class="current-channel-name">감지 중...</span>
+    <button id="quickAddBtn" class="btn-quick-add" style="display: none;">이 채널 블랙리스트 추가</button>
+  </div>
+
+  <!-- 직접 입력 영역 -->
+  <div class="input-group">
+    <input type="text" id="channelInput" placeholder="직접 채널 이름 입력..." />
+    <button id="addBtn" class="btn-add">추가</button>
+  </div>
+
+  <ul id="blacklist"></ul>
+
+  <div class="list-footer">
+    <span id="listSummary"></span>
+    <button id="manageBtn" class="manage-link">전체 관리</button>
+  </div>
+
+  <!-- 부가 설정 -->
+  <div class="settings">
+    <label class="setting-row">
+      <input type="checkbox" id="blockAdsToggle" />
+      <span>광고 자동 재생 막기</span>
+    </label>
+    <p class="setting-desc">
+      광고를 일시정지하고 안내를 표시합니다. 화면을 클릭하면 재생됩니다. (기본 꺼짐)
+    </p>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
