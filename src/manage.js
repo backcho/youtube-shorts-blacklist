@@ -42,9 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
       items = items.filter((it) => normalizeChannelName(it.name).includes(keyword));
     }
 
+    // 저장 순서 = 등록 순서. recent 는 뒤집기만 하면 된다.
+    // 이름 정렬 로케일은 지정하지 않아 브라우저 기본 로케일을 따른다.
     const sort = sortSelect.value;
     if (sort === 'recent') items.reverse();
-    else if (sort === 'name') items.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    else if (sort === 'nameAsc') items.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sort === 'nameDesc') items.sort((a, b) => b.name.localeCompare(a.name));
 
     countEl.textContent = keyword
       ? t('countFiltered', [String(items.length), String(blacklist.length)])

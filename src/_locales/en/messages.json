@@ -1,58 +1,179 @@
 {
-  "extName":            { "message": "Shorts Blocker for YouTube" },
-  "extDescription":     { "message": "Automatically pauses Shorts from channels on your blacklist." },
-
-  "popupTitle":         { "message": "🚫 Shorts Blacklist" },
-  "currentChannelLabel":{ "message": "Now playing:" },
-  "detecting":          { "message": "Detecting..." },
-  "quickAdd":           { "message": "Add this channel" },
-  "channelPlaceholder": { "message": "Enter a channel name..." },
-  "add":                { "message": "Add" },
-  "emptyList":          { "message": "No channels on the blacklist." },
-  "manageAll":          { "message": "Manage all" },
-  "channelNotFound":    { "message": "Channel not found." },
-  "notShortsPage":      { "message": "Not a YouTube Shorts page." },
-  "alreadyRegistered":  { "message": "That channel is already on the list." },
-  "addedOn":            { "message": "Added: $DATE$",
-                          "placeholders": { "date": { "content": "$1" } } },
-  "summaryRecent":      { "message": "Showing $SHOWN$ recent / $TOTAL$ total",
-                          "placeholders": { "shown": { "content": "$1" }, "total": { "content": "$2" } } },
-  "summaryTotal":       { "message": "$TOTAL$ total",
-                          "placeholders": { "total": { "content": "$1" } } },
-
-  "blockAdsLabel":      { "message": "Block ad autoplay" },
-  "blockAdsDesc":       { "message": "Pauses ads and shows a notice. Click the screen to play. (Off by default)" },
-
-  "manageTitle":        { "message": "🚫 Shorts Blacklist" },
-  "manageSubtitle":     { "message": "Search and organize the channels you have added." },
-  "addSectionTitle":    { "message": "Add a channel" },
-  "managePlaceholder":  { "message": "Channel name or @handle..." },
-  "listSectionTitle":   { "message": "Registered channels" },
-  "searchPlaceholder":  { "message": "Search..." },
-  "sortRecent":         { "message": "Date added ↓ (newest)" },
-  "sortOldest":         { "message": "Date added ↑ (oldest)" },
-  "sortName":           { "message": "Name" },
-  "displaySettings":    { "message": "Display settings" },
-  "recentCountLabel":   { "message": "Recent channels shown in popup" },
-  "save":               { "message": "Save" },
-  "saved":              { "message": "Saved." },
-  "recentCountHint":    { "message": "The popup shows only recently added channels. Manage the full list here." },
-  "noResults":          { "message": "No matching channels." },
-  "emptyListManage":    { "message": "No channels added yet." },
-  "deleteTitle":        { "message": "Delete" },
-  "invalidCount":       { "message": "Enter a number of 1 or greater." },
-  "countFiltered":      { "message": "($SHOWN$ / $TOTAL$)",
-                          "placeholders": { "shown": { "content": "$1" }, "total": { "content": "$2" } } },
-  "countAll":           { "message": "($TOTAL$)",
-                          "placeholders": { "total": { "content": "$1" } } },
-  "noDate":             { "message": "No date" },
-
-  "overlayBlocked":     { "message": "🚫 Blacklisted channel [$CHANNEL$] — paused",
-                          "placeholders": { "channel": { "content": "$1" } } },
-  "overlayAd":          { "message": "📺 Ad — autoplay blocked" },
-  "dontRecommend":      { "message": "Don't recommend channel" },
-  "processing":         { "message": "Working..." },
-  "recommendDone":      { "message": "Done" },
-  "menuNotFound":       { "message": "Menu not found" },
-  "selectFromMenu":     { "message": "Pick it from the menu" }
+  "extName": {
+    "message": "Shorts Blocker for YouTube"
+  },
+  "extDescription": {
+    "message": "Automatically pauses Shorts from channels on your blacklist."
+  },
+  "popupTitle": {
+    "message": "🚫 Shorts Blacklist"
+  },
+  "currentChannelLabel": {
+    "message": "Now playing:"
+  },
+  "detecting": {
+    "message": "Detecting..."
+  },
+  "quickAdd": {
+    "message": "Add this channel"
+  },
+  "channelPlaceholder": {
+    "message": "Enter a channel name..."
+  },
+  "add": {
+    "message": "Add"
+  },
+  "emptyList": {
+    "message": "No channels on the blacklist."
+  },
+  "manageAll": {
+    "message": "Manage all"
+  },
+  "channelNotFound": {
+    "message": "Channel not found."
+  },
+  "notShortsPage": {
+    "message": "Not a YouTube Shorts page."
+  },
+  "alreadyRegistered": {
+    "message": "That channel is already on the list."
+  },
+  "addedOn": {
+    "message": "Added: $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "summaryRecent": {
+    "message": "Showing $SHOWN$ recent / $TOTAL$ total",
+    "placeholders": {
+      "shown": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "summaryTotal": {
+    "message": "$TOTAL$ total",
+    "placeholders": {
+      "total": {
+        "content": "$1"
+      }
+    }
+  },
+  "blockAdsLabel": {
+    "message": "Block ad autoplay"
+  },
+  "blockAdsDesc": {
+    "message": "Pauses ads and shows a notice. Click the screen to play. (Off by default)"
+  },
+  "manageTitle": {
+    "message": "🚫 Shorts Blacklist"
+  },
+  "manageSubtitle": {
+    "message": "Search and organize the channels you have added."
+  },
+  "addSectionTitle": {
+    "message": "Add a channel"
+  },
+  "managePlaceholder": {
+    "message": "Channel name or @handle..."
+  },
+  "listSectionTitle": {
+    "message": "Registered channels"
+  },
+  "searchPlaceholder": {
+    "message": "Search..."
+  },
+  "sortRecent": {
+    "message": "Date added ↓ (newest)"
+  },
+  "sortOldest": {
+    "message": "Date added ↑ (oldest)"
+  },
+  "sortNameAsc": {
+    "message": "Name ↑ (A→Z)"
+  },
+  "sortNameDesc": {
+    "message": "Name ↓ (Z→A)"
+  },
+  "displaySettings": {
+    "message": "Display settings"
+  },
+  "recentCountLabel": {
+    "message": "Recent channels shown in popup"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "saved": {
+    "message": "Saved."
+  },
+  "recentCountHint": {
+    "message": "The popup shows only recently added channels. Manage the full list here."
+  },
+  "noResults": {
+    "message": "No matching channels."
+  },
+  "emptyListManage": {
+    "message": "No channels added yet."
+  },
+  "deleteTitle": {
+    "message": "Delete"
+  },
+  "invalidCount": {
+    "message": "Enter a number of 1 or greater."
+  },
+  "countFiltered": {
+    "message": "($SHOWN$ / $TOTAL$)",
+    "placeholders": {
+      "shown": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "countAll": {
+    "message": "($TOTAL$)",
+    "placeholders": {
+      "total": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDate": {
+    "message": "No date"
+  },
+  "overlayBlocked": {
+    "message": "🚫 Blacklisted channel [$CHANNEL$] — paused",
+    "placeholders": {
+      "channel": {
+        "content": "$1"
+      }
+    }
+  },
+  "overlayAd": {
+    "message": "📺 Ad — autoplay blocked"
+  },
+  "dontRecommend": {
+    "message": "Don't recommend channel"
+  },
+  "processing": {
+    "message": "Working..."
+  },
+  "recommendDone": {
+    "message": "Done"
+  },
+  "menuNotFound": {
+    "message": "Menu not found"
+  },
+  "selectFromMenu": {
+    "message": "Pick it from the menu"
+  }
 }

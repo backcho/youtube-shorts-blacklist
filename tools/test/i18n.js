@@ -102,6 +102,21 @@ function runContent(locale) {
   };
 }
 
+// ── 로케일 폴백 (manifest default_locale 기준) ────────────────
+const { resolveLocale, defaultLocale } = require('./helpers');
+check('I13 ko / ko-KR 는 한국어',
+      resolveLocale('ko') === 'ko' && resolveLocale('ko-KR') === 'ko');
+check('I14 지원하지 않는 언어는 default_locale 로 폴백',
+      ['ja', 'fr', 'zh-CN', 'de'].every((l) => resolveLocale(l) === defaultLocale()));
+check('I15 default_locale 은 en', defaultLocale() === 'en');
+check('I16 en-GB 등 지역 변형도 en', resolveLocale('en-GB') === 'en');
+check('I17 폴백 로케일에 모든 키가 있음',
+      [...keys.ko].every((k) => keys.en.has(k)));
+
+const ja = makeI18n('ja');
+check('I18 미지원 언어에서 영어 문구가 나온다',
+      ja.getMessage('overlayAd') === msgs.en.overlayAd.message);
+
 const en = runContent('en');
 check('I8 영어 로케일 오버레이 문구', /Blacklisted channel \[@blocked\]/.test(en.msg() || ''));
 check('I9 영어 로케일 버튼 라벨', en.btn() === "Don't recommend channel");
