@@ -57,13 +57,23 @@ function makeEnv({ menuItems, moreButton = 'real', blockAds = false, blacklist =
     const more = doc.createElement('button');
     let mount = reel;
     if (moreButton === 'real') {
+      // ytd-shorts-player-controls > #right-controls > #menu-button > ytd-menu-renderer
+      const controls = doc.createElement('ytd-shorts-player-controls');
+      const right = doc.createElement('div');
+      right.id = 'right-controls';
+      const menuButton = doc.createElement('div');
+      menuButton.id = 'menu-button';
+      controls.appendChild(right);
+      right.appendChild(menuButton);
+      reel.appendChild(controls);
+
       const menu = doc.createElement('ytd-menu-renderer');
       menu.className = 'style-scope ytd-shorts-player-controls';
       const shape = doc.createElement('yt-button-shape');
       shape.id = 'button-shape';
       shape.className = 'style-scope ytd-menu-renderer';
       menu.appendChild(shape);
-      reel.appendChild(menu);
+      menuButton.appendChild(menu);
       mount = shape;
       more.setAttribute('aria-label', '추가 작업');
     } else if (moreButton === 'label-only') {
@@ -308,6 +318,50 @@ const REAL_MENU = ['설명', '재생목록에 저장', '자막꺼짐', '전체 �
     await sleep(400);
     check('R23 사이드바 항목을 건드리지 않음', !e.clicked.some((c) => c.startsWith('guide:')));
     check('R24 정상 항목 클릭 유지', e.clicked.includes('채널 추천 안함'));
+  }
+
+  // '채널 추천 안 함' 실행 후 유튜브가 다음 영상으로 자동 전환하는 흐름
+  {
+    const e = makeEnv({ menuItems: REAL_MENU });
+    await sleep(40);
+    check('R25 차단 영상이 정지된 상태', e.isPaused() === true);
+
+    e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
+    await sleep(400);
+    check('R26 추천 안 함 처리됨', e.clicked.includes('채널 추천 안함'));
+    check('R27 처리 후 버튼 표시', e.actionBtn().textContent === '추천 안 함 처리됨');
+
+    // 유튜브가 다음 영상(정상 채널)으로 넘긴다
+    e.reel.removeAttribute('is-active');
+    e.reel.getBoundingClientRect = () => ({ top: -800, bottom: 0, height: 800, width: 400,
+                                            left: 0, right: 400 });
+    const next = e.doc.createElement('ytd-reel-video-renderer');
+    next.setAttribute('is-active', '');
+    const nextVideo = e.doc.createElement('video');
+    let nextPaused = true;   // 확장이 막아둔 여파로 정지된 채 시작
+    let played = 0;
+    Object.defineProperty(nextVideo, 'paused', { get: () => nextPaused, configurable: true });
+    Object.defineProperty(nextVideo, 'readyState', { get: () => 4, configurable: true });
+    nextVideo.pause = () => { nextPaused = true; };
+    nextVideo.play = () => { played++; nextPaused = false; return Promise.resolve(); };
+    next.appendChild(nextVideo);
+    const nextBar = e.doc.createElement('div');
+    nextBar.className = 'ytReelChannelBarViewModelChannelName';
+    const nextLink = e.doc.createElement('a');
+    nextLink.setAttribute('href', '/@normal');
+    nextBar.appendChild(nextLink);
+    next.appendChild(nextBar);
+    next.getBoundingClientRect = () => ({ top: 0, bottom: 800, height: 800, width: 400,
+                                          left: 0, right: 400 });
+    e.doc.getElementById('app').appendChild(next);
+    e.win.history.replaceState({}, '', '/shorts/next001');
+
+    e.win.checkAndHandleVideo();
+    await sleep(40);
+    check('R28 전환된 정상 영상이 재생 복구됨', nextPaused === false && played === 1);
+    check('R29 이전 오버레이 정리됨', e.overlayVisible() === false);
+    check('R30 버튼 상태가 초기화됨',
+          e.reel.querySelector('.blacklist-overlay-action').textContent === '채널 추천 안 함');
   }
 
   console.log(`\n${pass} passed, ${fail} failed`);

@@ -97,14 +97,18 @@ const MENU_WAIT_ATTEMPTS = 20;
 // 숏츠의 '⋮' 버튼 후보들. 위와 같은 이유로 i18n 대상이 아니다.
 //
 // 관측된 구조(2026-08):
-//   ytd-menu-renderer.style-scope.ytd-shorts-player-controls
-//     > yt-button-shape#button-shape.style-scope.ytd-menu-renderer
-//       > button[aria-label="추가 작업"]      (button 자체에는 id 가 없다)
+//   ytd-shorts-player-controls
+//     > div#right-controls
+//       > div#menu-button                (내부에 ps-dom-if 로 감싸여 있다)
+//         > ytd-menu-renderer.style-scope.ytd-shorts-player-controls
+//           > yt-button-shape#button-shape.style-scope.ytd-menu-renderer
+//             > button[aria-label="추가 작업"]     (button 자체에는 id 가 없다)
 //
 // 구조 기반 셀렉터를 먼저 쓴다. aria-label 은 UI 언어를 타지만 구조는 그렇지 않다.
 // 라벨 후보는 구조가 바뀌었을 때를 위한 폴백이다.
 const MORE_ACTIONS_SELECTORS = [
   'ytd-menu-renderer.ytd-shorts-player-controls button',
+  '#menu-button ytd-menu-renderer button',
   'ytd-menu-renderer yt-button-shape#button-shape button',
   'ytd-menu-renderer button',
   'button[aria-label="추가 작업"]',

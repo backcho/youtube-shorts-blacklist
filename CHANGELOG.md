@@ -43,10 +43,17 @@
   (`기타 작업`·`더보기`가 아니다). 라벨은 UI 언어를 타므로 구조 기반 셀렉터를 우선한다.
 
   ```
-  ytd-menu-renderer.style-scope.ytd-shorts-player-controls
-    > yt-button-shape#button-shape.style-scope.ytd-menu-renderer
-      > button[aria-label="추가 작업"]
+  ytd-shorts-player-controls
+    > div#right-controls
+      > div#menu-button                (내부가 ps-dom-if 로 감싸여 있다)
+        > ytd-menu-renderer.style-scope.ytd-shorts-player-controls
+          > yt-button-shape#button-shape.style-scope.ytd-menu-renderer
+            > button[aria-label="추가 작업"]
   ```
+
+- `채널 추천 안 함` 을 실행하면 **유튜브가 자동으로 다음 영상으로 넘긴다.** 확장의 동작이 아니다.
+  이때 활성 reel 이 교체되므로 상태가 초기화되고, 확장이 막아둔 정지의 여파는
+  전환 직후 복구 창에서 풀린다.
 
 - `⋮` 메뉴 항목은 `yt-list-item-view-model`이고, **`채널 추천 안함` 바로 옆이 `신고`다.**
   부분 일치나 순서 기반 탐색은 오클릭 위험이 있어 문구 완전 일치만 사용한다.
