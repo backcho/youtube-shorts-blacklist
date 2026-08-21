@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  applyI18n();
+
   const channelInput = document.getElementById('channelInput');
   const addBtn = document.getElementById('addBtn');
   const blacklistUI = document.getElementById('blacklist');
@@ -20,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tab && tab.url && tab.url.includes('youtube.com/shorts')) {
       chrome.tabs.sendMessage(tab.id, { action: 'getCurrentChannel' }, (response) => {
         if (chrome.runtime.lastError || !response || !response.channelName) {
-          currentChannelText.textContent = '채널을 찾을 수 없습니다.';
+          currentChannelText.textContent = t('channelNotFound');
           return;
         }
 
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quickAddBtn.style.display = 'block';
       });
     } else {
-      currentChannelText.textContent = '유튜브 숏츠 페이지가 아닙니다.';
+      currentChannelText.textContent = t('notShortsPage');
     }
   });
 
@@ -50,7 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderList(list) {   // list: toChannelEntries 결과
     blacklistUI.innerHTML = '';
     if (list.length === 0) {
-      blacklistUI.innerHTML = '<div class="empty-msg">등록된 블랙리스트 채널이 없습니다.</div>';
+      const empty = document.createElement('div');
+      empty.className = 'empty-msg';
+      empty.textContent = t('emptyList');
+      blacklistUI.appendChild(empty);
       listSummary.textContent = '';
       return;
     }
@@ -59,15 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const recent = list.slice().reverse().slice(0, recentCount);
 
     listSummary.textContent = list.length > recent.length
-      ? `최근 ${recent.length}개 표시 / 전체 ${list.length}개`
-      : `전체 ${list.length}개`;
+      ? t('summaryRecent', [String(recent.length), String(list.length)])
+      : t('summaryTotal', [String(list.length)]);
 
     recent.forEach((entry) => {
       const li = document.createElement('li');
 
       const label = document.createElement('span');
       label.textContent = entry.name;
-      label.title = `등록일: ${formatAddedAt(entry.addedAt)}`;
+      label.title = t('addedOn', [formatAddedAt(entry.addedAt)]);
 
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = '✕';
@@ -90,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const entries = toChannelEntries(result.blacklist);
 
       if (findChannelEntry(entries, channelName)) {
-        alert('이미 등록된 채널입니다.');
+        alert(t('alreadyRegistered'));
         return;
       }
 

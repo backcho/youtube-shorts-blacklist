@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
+const { makeI18n } = require('./helpers');
 
 // 확장은 shared.js 를 content.js 보다 먼저 주입한다. 테스트도 동일하게 맞춘다.
 function loadContentScript(targetPath) {
@@ -36,6 +37,7 @@ function makeEnv(blacklist, channelHref, shortsId) {
       onChanged: { addListener: (fn) => listeners.storage.push(fn) },
     },
     runtime: { onMessage: { addListener: (fn) => listeners.message.push(fn) } },
+    i18n: makeI18n(process.env.TEST_LOCALE || 'ko'),
   };
 
   // reel + video 구성

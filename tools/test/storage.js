@@ -2,9 +2,10 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { makeI18n } = require('./helpers');
 
 const SHARED = fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'shared.js'), 'utf8');
-const ctx = { console };
+const ctx = { console, chrome: { i18n: makeI18n(process.env.TEST_LOCALE || 'ko') } };
 vm.createContext(ctx);
 vm.runInContext(SHARED, ctx);
 

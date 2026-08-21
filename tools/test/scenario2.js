@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
+const { makeI18n } = require('./helpers');
 
 const TARGET = process.argv[2] || require('path').join(__dirname, '..', '..', 'src', 'content.js');
 // 확장은 shared.js 를 content.js 보다 먼저 주입한다. 테스트도 동일하게 맞춘다.
@@ -44,6 +45,7 @@ function makeEnv(blacklist, opts = {}) {
       onChanged: { addListener: (fn) => listeners.storage.push(fn) },
     },
     runtime: { onMessage: { addListener: (fn) => listeners.message.push(fn) } },
+    i18n: makeI18n(process.env.TEST_LOCALE || 'ko'),
   };
 
   const env = { win, doc, listeners, reels: [], flushStorage: () => storeCb && storeCb() };

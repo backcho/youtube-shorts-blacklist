@@ -3,7 +3,7 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 const SRC = path.join(__dirname, '..', '..', 'src', 'content.js');
-const suites = ['storage.js', 'scenario.js', 'scenario2.js', 'adrisk.js', 'recommend.js'];
+const suites = ['i18n.js', 'storage.js', 'scenario.js', 'scenario2.js', 'adrisk.js', 'recommend.js'];
 
 let failed = 0;
 for (const suite of suites) {

@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');
+const { makeI18n } = require('./helpers');
 
 // 확장은 shared.js 를 content.js 보다 먼저 주입한다. 테스트도 동일하게 맞춘다.
 function loadContentScript(targetPath) {
@@ -30,6 +31,7 @@ function makeEnv({ menuItems, moreButton = true, blockAds = false, blacklist = [
     storage: { local: { get: (k, cb) => cb({ blacklist, blockAds }), set: (o, cb) => cb && cb() },
                onChanged: { addListener: () => {} } },
     runtime: { onMessage: { addListener: () => {} } },
+    i18n: makeI18n(process.env.TEST_LOCALE || 'ko'),
   };
 
   const reel = doc.createElement('ytd-reel-video-renderer');

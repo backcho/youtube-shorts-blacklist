@@ -73,8 +73,11 @@ function isAdReel(reel) {
 // 자동 클릭은 문구가 정확히 일치할 때만 하고, 실패하면 메뉴를 열어 둔 채 사용자에게 넘긴다.
 // (메뉴에는 '신고'가 바로 옆에 있어 부분 일치나 순서 기반 탐색은 절대 쓰지 않는다)
 // ─────────────────────────────────────────────────────────────
-const DONT_RECOMMEND_LABEL = '채널 추천 안 함';
+// 오버레이 버튼 라벨은 브라우저 UI 언어를 따른다
+const DONT_RECOMMEND_LABEL = t('dontRecommend');
 
+// 유튜브 메뉴 문구. 브라우저 UI 언어가 아니라 '유튜브' UI 언어를 따르므로
+// i18n 으로 빼지 않고 두 언어를 모두 들고 있는다.
 // 공백을 지우고 비교한다 ('채널 추천 안함' / '채널 추천 안 함' 등 표기 흔들림 대응)
 const DONT_RECOMMEND_MENU_TEXTS = [
   '채널추천안함',
@@ -85,7 +88,7 @@ const DONT_RECOMMEND_MENU_TEXTS = [
 
 const MENU_ITEM_SELECTOR = 'yt-list-item-view-model, ytd-menu-service-item-renderer, tp-yt-paper-item';
 
-// 숏츠의 '⋮'(기타 작업) 버튼 후보들
+// 숏츠의 '⋮'(기타 작업) 버튼 후보들. 위와 같은 이유로 i18n 대상이 아니다.
 const MORE_ACTIONS_SELECTORS = [
   'button[aria-label="기타 작업"]',
   'button[aria-label="더보기"]',
@@ -146,12 +149,12 @@ function onDontRecommendClick(e) {
   const moreBtn = findMoreActionsButton(data && data.activeReel);
 
   if (!moreBtn) {
-    button.textContent = '메뉴를 찾지 못했습니다';
+    button.textContent = t('menuNotFound');
     return;
   }
 
   button.disabled = true;
-  button.textContent = '처리 중...';
+  button.textContent = t('processing');
   moreBtn.click();
 
   // 메뉴는 비동기로 렌더되므로 잠시 기다렸다가 항목을 찾는다
@@ -163,7 +166,7 @@ function onDontRecommendClick(e) {
     if (item) {
       clearInterval(timer);
       clickMenuItem(item);
-      button.textContent = '추천 안 함 처리됨';
+      button.textContent = t('recommendDone');
       return;
     }
 
@@ -171,7 +174,7 @@ function onDontRecommendClick(e) {
       clearInterval(timer);
       // 자동 처리 실패: 메뉴는 열려 있으므로 사용자가 직접 고르게 둔다
       button.disabled = false;
-      button.textContent = '메뉴에서 선택하세요';
+      button.textContent = t('selectFromMenu');
     }
   }, 100);
 }
@@ -189,9 +192,9 @@ const OVERLAY_STYLES = {
 };
 
 // 정지 사유 문구
-const AD_BLOCK_MESSAGE = '📺 광고 - 자동 재생하지 않습니다';
+const AD_BLOCK_MESSAGE = t('overlayAd');
 function blacklistBlockMessage(channelName) {
-  return `🚫 블랙리스트 채널 [${channelName}] - 자동 정지됨`;
+  return t('overlayBlocked', [String(channelName)]);
 }
 
 // 현재 숏츠 ID(URL 기반) 추출

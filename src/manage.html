@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>숏츠 블랙리스트 관리</title>
+  <title>Shorts Blacklist</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -73,45 +73,45 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>🚫 숏츠 블랙리스트 관리</h1>
-    <p class="subtitle">등록된 채널을 검색하고 정리할 수 있습니다.</p>
+    <h1 data-i18n="manageTitle"></h1>
+    <p class="subtitle" data-i18n="manageSubtitle"></p>
 
     <div class="card">
-      <h2>채널 추가</h2>
+      <h2 data-i18n="addSectionTitle"></h2>
       <div class="row">
-        <input type="text" id="addInput" placeholder="채널 이름 또는 @핸들 입력..." />
-        <button id="addBtn" class="primary">추가</button>
+        <input type="text" id="addInput" data-i18n-placeholder="managePlaceholder" />
+        <button id="addBtn" class="primary" data-i18n="add"></button>
       </div>
     </div>
 
     <div class="card">
-      <h2>등록된 채널 <span id="count" class="count"></span></h2>
+      <h2><span data-i18n="listSectionTitle"></span> <span id="count" class="count"></span></h2>
       <div class="row">
-        <input type="text" id="searchInput" placeholder="검색..." />
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" />
         <select id="sortSelect">
-          <option value="recent">등록일 ↓ (최근순)</option>
-          <option value="oldest">등록일 ↑ (오래된순)</option>
-          <option value="name">이름순</option>
+          <option value="recent" data-i18n="sortRecent"></option>
+          <option value="oldest" data-i18n="sortOldest"></option>
+          <option value="name" data-i18n="sortName"></option>
         </select>
       </div>
       <ul id="list"></ul>
     </div>
 
     <div class="card">
-      <h2>표시 설정</h2>
+      <h2 data-i18n="displaySettings"></h2>
       <div class="row">
-        <label for="recentCountInput">팝업에 표시할 최근 채널 수</label>
+        <label for="recentCountInput" data-i18n="recentCountLabel"></label>
         <input type="number" id="recentCountInput" min="1" max="100" />
-        <button id="saveCountBtn">저장</button>
+        <button id="saveCountBtn" data-i18n="save"></button>
         <span id="saveMsg" class="count"></span>
       </div>
-      <p class="hint">팝업에는 최근 등록한 채널만 표시됩니다. 전체 목록은 이 페이지에서 관리하세요.</p>
+      <p class="hint" data-i18n="recentCountHint"></p>
 
       <div class="setting-row" style="margin-top:16px;">
         <input type="checkbox" id="blockAdsToggle" />
-        <label for="blockAdsToggle">광고 자동 재생 막기</label>
+        <label for="blockAdsToggle" data-i18n="blockAdsLabel"></label>
       </div>
-      <p class="hint">광고를 일시정지하고 안내를 표시합니다. 화면을 클릭하면 재생됩니다. (기본 꺼짐)</p>
+      <p class="hint" data-i18n="blockAdsDesc"></p>
     </div>
   </div>
 

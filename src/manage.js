@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  applyI18n();
+
   const addInput = document.getElementById('addInput');
   const addBtn = document.getElementById('addBtn');
   const searchInput = document.getElementById('searchInput');
@@ -45,16 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (sort === 'name') items.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 
     countEl.textContent = keyword
-      ? `(${items.length} / ${blacklist.length}개)`
-      : `(${blacklist.length}개)`;
+      ? t('countFiltered', [String(items.length), String(blacklist.length)])
+      : t('countAll', [String(blacklist.length)]);
 
     listEl.innerHTML = '';
     if (items.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'empty-msg';
       empty.textContent = blacklist.length === 0
-        ? '등록된 채널이 없습니다.'
-        : '검색 결과가 없습니다.';
+        ? t('emptyListManage')
+        : t('noResults');
       listEl.appendChild(empty);
       return;
     }
@@ -78,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const del = document.createElement('button');
       del.className = 'delete-btn';
       del.textContent = '✕';
-      del.title = '삭제';
+      del.title = t('deleteTitle');
       del.addEventListener('click', () => removeChannel(it.name));
 
       const right = document.createElement('span');
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!name) return;
 
     if (findChannelEntry(blacklist, name)) {
-      alert('이미 등록된 채널입니다.');
+      alert(t('alreadyRegistered'));
       return;
     }
 
@@ -117,11 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
   saveCountBtn.addEventListener('click', () => {
     const value = Number(recentCountInput.value);
     if (!Number.isFinite(value) || value < 1) {
-      alert('1 이상의 숫자를 입력하세요.');
+      alert(t('invalidCount'));
       return;
     }
     chrome.storage.local.set({ popupRecentCount: value }, () => {
-      saveMsg.textContent = '저장되었습니다.';
+      saveMsg.textContent = t('saved');
       setTimeout(() => { saveMsg.textContent = ''; }, 2000);
     });
   });

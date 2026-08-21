@@ -68,7 +68,7 @@ if [ "$ASSUME_YES" -ne 1 ]; then
 fi
 
 mkdir -p "$TARGET"
-cp -f "$SRC_DIR"/* "$TARGET"/
+cp -rf "$SRC_DIR"/* "$TARGET"/
 
 echo
 echo "복사 완료:"

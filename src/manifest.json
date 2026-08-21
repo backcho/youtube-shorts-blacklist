@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Shorts Blocker for YouTube",
+  "name": "__MSG_extName__",
   "version": "0.1.0",
-  "description": "블랙리스트에 등록된 채널의 숏츠 재생을 자동으로 일시정지합니다.",
+  "description": "__MSG_extDescription__",
   "permissions": [
     "storage",
     "activeTab"
@@ -26,5 +26,6 @@
   "options_ui": {
     "page": "manage.html",
     "open_in_tab": true
-  }
+  },
+  "default_locale": "en"
 }

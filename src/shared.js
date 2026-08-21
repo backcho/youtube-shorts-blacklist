@@ -7,6 +7,29 @@
 //
 // content script 에서도 쓰이므로 function 선언만 사용한다.
 
+// ── i18n ────────────────────────────────────────────────────
+// 브라우저 UI 언어에 따라 _locales/{ko,en}/messages.json 이 선택된다.
+// 유튜브 메뉴 문구 매칭(content.js)은 여기 포함되지 않는다.
+// 그쪽은 브라우저 언어가 아니라 유튜브 UI 언어를 따르므로 양쪽을 모두 들고 있어야 한다.
+function t(key, substitutions) {
+  const msg = chrome.i18n.getMessage(key, substitutions);
+  return msg || key;
+}
+
+// data-i18n / data-i18n-placeholder / data-i18n-title 속성을 채운다
+function applyI18n(root) {
+  const scope = root || document;
+  scope.querySelectorAll('[data-i18n]').forEach((el) => {
+    el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  scope.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+  });
+  scope.querySelectorAll('[data-i18n-title]').forEach((el) => {
+    el.title = t(el.getAttribute('data-i18n-title'));
+  });
+}
+
 function normalizeChannelName(name) {
   return String(name || '').trim().toLowerCase().replace(/^@/, '');
 }
@@ -40,9 +63,9 @@ function findChannelEntry(entries, name) {
 }
 
 function formatAddedAt(addedAt) {
-  if (!addedAt) return '기록 없음';
+  if (!addedAt) return t('noDate');
   const d = new Date(addedAt);
-  if (Number.isNaN(d.getTime())) return '기록 없음';
+  if (Number.isNaN(d.getTime())) return t('noDate');
   const pad = (n) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
