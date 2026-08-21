@@ -88,15 +88,22 @@ const DONT_RECOMMEND_MENU_TEXTS = [
 
 const MENU_ITEM_SELECTOR = 'yt-list-item-view-model, ytd-menu-service-item-renderer, tp-yt-paper-item';
 
-// 숏츠의 '⋮'(기타 작업) 버튼 후보들. 위와 같은 이유로 i18n 대상이 아니다.
+// 숏츠의 '⋮' 버튼 후보들. 위와 같은 이유로 i18n 대상이 아니다.
+//
+// 관측된 구조(2026-08):
+//   ytd-menu-renderer.style-scope.ytd-shorts-player-controls
+//     > yt-button-shape#button-shape.style-scope.ytd-menu-renderer
+//       > button[aria-label="추가 작업"]      (button 자체에는 id 가 없다)
+//
+// 구조 기반 셀렉터를 먼저 쓴다. aria-label 은 UI 언어를 타지만 구조는 그렇지 않다.
+// 라벨 후보는 구조가 바뀌었을 때를 위한 폴백이다.
 const MORE_ACTIONS_SELECTORS = [
+  'ytd-menu-renderer.ytd-shorts-player-controls button',
+  'ytd-menu-renderer yt-button-shape#button-shape button',
+  'ytd-menu-renderer button',
+  'button[aria-label="추가 작업"]',
   'button[aria-label="기타 작업"]',
-  'button[aria-label="더보기"]',
   'button[aria-label*="More actions"]',
-  'button[aria-label*="기타"]',
-  '#menu-button button',
-  'ytd-menu-renderer #button',
-  'yt-icon-button#menu-button',
 ];
 
 // 영상이 바뀌면 버튼을 기본 상태로 되돌린다 (이전 영상의 '처리됨' 표시가 남지 않도록)

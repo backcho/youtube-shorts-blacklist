@@ -22,7 +22,7 @@ function check(name, cond) {
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 // menuItems: '⋮' 클릭 시 DOM에 붙일 메뉴 항목 텍스트 (null 이면 메뉴가 열리지 않음)
-function makeEnv({ menuItems, moreButton = true, blockAds = false, blacklist = ['@blocked'] }) {
+function makeEnv({ menuItems, moreButton = 'real', blockAds = false, blacklist = ['@blocked'] }) {
   const dom = new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>',
     { url: 'https://www.youtube.com/shorts/blk001', runScripts: 'outside-only', pretendToBeVisual: true });
   const win = dom.window, doc = win.document;
@@ -51,8 +51,27 @@ function makeEnv({ menuItems, moreButton = true, blockAds = false, blacklist = [
 
   const clicked = [];
   if (moreButton) {
+    // 실제 관측 구조:
+    //   ytd-menu-renderer.style-scope.ytd-shorts-player-controls
+    //     > yt-button-shape > button[aria-label="추가 작업"]  (id 없음)
     const more = doc.createElement('button');
-    more.setAttribute('aria-label', '기타 작업');
+    let mount = reel;
+    if (moreButton === 'real') {
+      const menu = doc.createElement('ytd-menu-renderer');
+      menu.className = 'style-scope ytd-shorts-player-controls';
+      const shape = doc.createElement('yt-button-shape');
+      shape.id = 'button-shape';
+      shape.className = 'style-scope ytd-menu-renderer';
+      menu.appendChild(shape);
+      reel.appendChild(menu);
+      mount = shape;
+      more.setAttribute('aria-label', '추가 작업');
+    } else if (moreButton === 'label-only') {
+      // 구조가 바뀌고 라벨만 남은 경우 (폴백 경로)
+      more.setAttribute('aria-label', '추가 작업');
+    } else if (moreButton === 'english') {
+      more.setAttribute('aria-label', 'More actions');
+    }
     more.addEventListener('click', () => {
       clicked.push('⋮');
       if (!menuItems) return;
@@ -69,7 +88,7 @@ function makeEnv({ menuItems, moreButton = true, blockAds = false, blacklist = [
         doc.body.appendChild(menu);
       }, 120);
     });
-    reel.appendChild(more);
+    mount.appendChild(more);
   }
 
   reel.getBoundingClientRect = () => ({ top: 0, bottom: 800, height: 800, width: 400, left: 0, right: 400 });
@@ -154,6 +173,24 @@ const REAL_MENU = ['설명', '재생목록에 저장', '자막꺼짐', '전체 �
     e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
     await sleep(200);
     check('R13 ⋮ 를 못 찾으면 안내 표시', e.actionBtn().textContent === '메뉴를 찾지 못했습니다');
+  }
+
+  // 구조가 바뀌어도 aria-label 폴백으로 동작해야 한다
+  {
+    const e = makeEnv({ menuItems: REAL_MENU, moreButton: 'label-only' });
+    await sleep(40);
+    e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
+    await sleep(400);
+    check('R13b 라벨 폴백(추가 작업)으로도 동작', e.clicked.includes('채널 추천 안함'));
+  }
+  {
+    const e = makeEnv({ menuItems: ['Description', "Don't recommend channel", 'Report'],
+                        moreButton: 'english' });
+    await sleep(40);
+    e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
+    await sleep(400);
+    check('R13c 영어 라벨(More actions) 폴백',
+          e.clicked.includes("Don't recommend channel") && !e.clicked.includes('Report'));
   }
 
   // 광고 구간에는 '채널 추천 안 함' 버튼이 보이면 안 된다

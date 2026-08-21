@@ -39,6 +39,15 @@
   `ad-created`는 광고가 한 번 생성되면 남으므로 판정에 쓰면 안 된다.
 - 광고 reel로 넘어갈 때 **URL이 바뀌지 않을 수 있다.** 그래서 항목 전환 감지는 URL과
   활성 reel 요소 교체를 함께 본다.
+- `⋮` 버튼은 액션 바 안에 있고 구조는 다음과 같다. `aria-label` 은 **`추가 작업`**이다
+  (`기타 작업`·`더보기`가 아니다). 라벨은 UI 언어를 타므로 구조 기반 셀렉터를 우선한다.
+
+  ```
+  ytd-menu-renderer.style-scope.ytd-shorts-player-controls
+    > yt-button-shape#button-shape.style-scope.ytd-menu-renderer
+      > button[aria-label="추가 작업"]
+  ```
+
 - `⋮` 메뉴 항목은 `yt-list-item-view-model`이고, **`채널 추천 안함` 바로 옆이 `신고`다.**
   부분 일치나 순서 기반 탐색은 오클릭 위험이 있어 문구 완전 일치만 사용한다.
 - 채널바는 `.ytReelChannelBarViewModelChannelName a`. 진입 직후에는 늦게 렌더된다.
