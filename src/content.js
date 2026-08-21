@@ -136,21 +136,18 @@ function findMoreActionsButton(reel) {
   return null;
 }
 
-// 열려 있는 드롭다운을 찾는다.
-// 페이지에는 닫힌 메뉴(댓글 정렬 등)가 여럿 떠 있어서 전역 검색은 그쪽 항목까지 잡는다.
-function findOpenDropdown() {
-  const dropdowns = document.querySelectorAll(MENU_CONTAINER_SELECTOR);
-  for (const dropdown of dropdowns) {
-    if (dropdown.getAttribute('aria-hidden') === 'true') continue;
-    const rect = dropdown.getBoundingClientRect();
-    if (rect.width > 0 && rect.height > 0) return dropdown;
-  }
-  return null;
-}
-
 function isVisible(el) {
   const rect = el.getBoundingClientRect();
   return rect.width > 0 && rect.height > 0;
+}
+
+// 열려 있는 드롭다운들.
+// 페이지에는 닫힌 메뉴(댓글 정렬 등)와 사이드바 가이드가 함께 떠 있어서
+// 전역 검색은 그쪽 항목까지 잡는다. 실제로 전역으로 훑으면 41개가 나오고
+// 그중 숏츠 메뉴는 8개뿐이다.
+function openDropdowns() {
+  return [...document.querySelectorAll(MENU_CONTAINER_SELECTOR)].filter(
+    (dropdown) => dropdown.getAttribute('aria-hidden') !== 'true' && isVisible(dropdown));
 }
 
 function matchDontRecommend(items) {
@@ -169,11 +166,13 @@ function matchDontRecommend(items) {
 // 전역 폴백은 드롭다운 구조가 바뀐 경우를 위한 것이라 마지막 시도에서만,
 // 그것도 화면에 실제로 보이는 항목에 한해 허용한다.
 function findDontRecommendItem(allowGlobalFallback) {
-  const dropdown = findOpenDropdown();
-  if (dropdown) {
-    return matchDontRecommend(dropdown.querySelectorAll(MENU_ITEM_SELECTOR));
+  // 열린 드롭다운이 둘 이상일 수 있으므로 하나씩 확인한다
+  const dropdowns = openDropdowns();
+  for (const dropdown of dropdowns) {
+    const hit = matchDontRecommend(dropdown.querySelectorAll(MENU_ITEM_SELECTOR));
+    if (hit) return hit;
   }
-  if (!allowGlobalFallback) return null;
+  if (dropdowns.length || !allowGlobalFallback) return null;
   return matchDontRecommend(
     [...document.querySelectorAll(MENU_ITEM_SELECTOR)].filter(isVisible));
 }

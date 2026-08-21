@@ -268,6 +268,48 @@ const REAL_MENU = ['설명', '재생목록에 저장', '자막꺼짐', '전체 �
     check('R20 열린 메뉴의 항목을 클릭', e.clicked.includes('채널 추천 안함'));
   }
 
+  // 열린 드롭다운이 둘일 때: 항목을 가진 쪽을 찾아야 한다
+  {
+    const e = makeEnv({ menuItems: REAL_MENU });
+    await sleep(40);
+
+    // 우리 메뉴보다 먼저 놓인, 열려 있지만 무관한 드롭다운 (댓글 정렬 등)
+    const other = e.doc.createElement('tp-yt-iron-dropdown');
+    other.getBoundingClientRect = () => ({ top: 0, left: 0, width: 200, height: 120,
+                                           bottom: 120, right: 200 });
+    ['인기순 추천 댓글 표시', '최신순 스팸 가능성이 있는 댓글을 포함하여 최근 댓글 표시']
+      .forEach((text) => {
+        const item = e.doc.createElement('tp-yt-paper-item');
+        item.textContent = text;
+        item.addEventListener('click', () => e.clicked.push(text));
+        other.appendChild(item);
+      });
+    e.doc.body.insertBefore(other, e.doc.body.firstChild);
+
+    e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
+    await sleep(400);
+    check('R21 열린 드롭다운이 둘이어도 올바른 항목을 클릭',
+          e.clicked.includes('채널 추천 안함'));
+    check('R22 무관한 드롭다운 항목은 건드리지 않음',
+          !e.clicked.some((c) => c.startsWith('인기순') || c.startsWith('최신순')));
+  }
+
+  // 사이드바 가이드처럼 무관한 tp-yt-paper-item 이 많아도 영향이 없어야 한다
+  {
+    const e = makeEnv({ menuItems: REAL_MENU });
+    await sleep(40);
+    ['홈', 'Shorts', '구독', '더보기', '간략히 보기', '신고 기록'].forEach((text) => {
+      const item = e.doc.createElement('tp-yt-paper-item');
+      item.textContent = text;
+      item.addEventListener('click', () => e.clicked.push('guide:' + text));
+      e.doc.body.appendChild(item);
+    });
+    e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
+    await sleep(400);
+    check('R23 사이드바 항목을 건드리지 않음', !e.clicked.some((c) => c.startsWith('guide:')));
+    check('R24 정상 항목 클릭 유지', e.clicked.includes('채널 추천 안함'));
+  }
+
   console.log(`\n${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
 })();
