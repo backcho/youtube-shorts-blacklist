@@ -88,6 +88,12 @@ const DONT_RECOMMEND_MENU_TEXTS = [
 
 const MENU_ITEM_SELECTOR = 'yt-list-item-view-model, ytd-menu-service-item-renderer, tp-yt-paper-item';
 
+// 메뉴 드롭다운의 최상위 요소
+const MENU_CONTAINER_SELECTOR = 'tp-yt-iron-dropdown';
+
+// 메뉴가 렌더될 때까지 100ms 간격으로 기다리는 횟수 (약 2초)
+const MENU_WAIT_ATTEMPTS = 20;
+
 // 숏츠의 '⋮' 버튼 후보들. 위와 같은 이유로 i18n 대상이 아니다.
 //
 // 관측된 구조(2026-08):
@@ -130,15 +136,46 @@ function findMoreActionsButton(reel) {
   return null;
 }
 
-// 열린 메뉴에서 '채널 추천 안 함' 항목을 찾는다 (완전 일치만)
-function findDontRecommendItem() {
-  const items = document.querySelectorAll(MENU_ITEM_SELECTOR);
+// 열려 있는 드롭다운을 찾는다.
+// 페이지에는 닫힌 메뉴(댓글 정렬 등)가 여럿 떠 있어서 전역 검색은 그쪽 항목까지 잡는다.
+function findOpenDropdown() {
+  const dropdowns = document.querySelectorAll(MENU_CONTAINER_SELECTOR);
+  for (const dropdown of dropdowns) {
+    if (dropdown.getAttribute('aria-hidden') === 'true') continue;
+    const rect = dropdown.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) return dropdown;
+  }
+  return null;
+}
+
+function isVisible(el) {
+  const rect = el.getBoundingClientRect();
+  return rect.width > 0 && rect.height > 0;
+}
+
+function matchDontRecommend(items) {
   for (const item of items) {
     if (DONT_RECOMMEND_MENU_TEXTS.includes(normalizeMenuText(item.textContent))) {
       return item;
     }
   }
   return null;
+}
+
+// 열린 메뉴에서 '채널 추천 안 함' 항목을 찾는다 (완전 일치만).
+//
+// 메뉴는 클릭 후 비동기로 렌더되므로, 기다리는 동안에는 열린 드롭다운 안에서만 찾는다.
+// 이때 전역으로 넓히면 아직 안 열린 우리 메뉴 대신 닫혀 있는 다른 메뉴의 항목을 집는다.
+// 전역 폴백은 드롭다운 구조가 바뀐 경우를 위한 것이라 마지막 시도에서만,
+// 그것도 화면에 실제로 보이는 항목에 한해 허용한다.
+function findDontRecommendItem(allowGlobalFallback) {
+  const dropdown = findOpenDropdown();
+  if (dropdown) {
+    return matchDontRecommend(dropdown.querySelectorAll(MENU_ITEM_SELECTOR));
+  }
+  if (!allowGlobalFallback) return null;
+  return matchDontRecommend(
+    [...document.querySelectorAll(MENU_ITEM_SELECTOR)].filter(isVisible));
 }
 
 // 항목 내부의 실제 클릭 대상을 찾는다
@@ -168,7 +205,7 @@ function onDontRecommendClick(e) {
   let attempts = 0;
   const timer = setInterval(() => {
     attempts++;
-    const item = findDontRecommendItem();
+    const item = findDontRecommendItem(attempts >= MENU_WAIT_ATTEMPTS);
 
     if (item) {
       clearInterval(timer);
@@ -177,7 +214,7 @@ function onDontRecommendClick(e) {
       return;
     }
 
-    if (attempts >= 20) {   // 약 2초
+    if (attempts >= MENU_WAIT_ATTEMPTS) {
       clearInterval(timer);
       // 자동 처리 실패: 메뉴는 열려 있으므로 사용자가 직접 고르게 둔다
       button.disabled = false;

@@ -77,8 +77,11 @@ function makeEnv({ menuItems, moreButton = 'real', blockAds = false, blacklist =
       if (!menuItems) return;
       // 유튜브처럼 비동기로 메뉴를 렌더한다
       win.setTimeout(() => {
-        const menu = doc.createElement('div');
+        // 실제 구조: 드롭다운 최상위는 tp-yt-iron-dropdown
+        const menu = doc.createElement('tp-yt-iron-dropdown');
         menu.id = 'menu';
+        menu.getBoundingClientRect = () => ({ top: 100, left: 100, width: 260, height: 300,
+                                              bottom: 400, right: 360 });
         menuItems.forEach((text) => {
           const item = doc.createElement('yt-list-item-view-model');
           item.textContent = text;
@@ -241,6 +244,28 @@ const REAL_MENU = ['설명', '재생목록에 저장', '자막꺼짐', '전체 �
     const e = makeEnv({ menuItems: REAL_MENU, blacklist: ['@blocked'] });
     await sleep(40);
     check('C4 구 문자열 형식도 그대로 차단', e.isPaused() === true);
+  }
+
+  // 닫힌 메뉴(댓글 정렬 등)가 함께 떠 있어도 열린 드롭다운만 대상으로 삼아야 한다
+  {
+    const e = makeEnv({ menuItems: REAL_MENU });
+    await sleep(40);
+
+    // 화면에 없는 드롭다운에 같은 문구의 항목을 심어 둔다
+    const stale = e.doc.createElement('tp-yt-iron-dropdown');
+    stale.setAttribute('aria-hidden', 'true');
+    stale.getBoundingClientRect = () => ({ top: 0, left: 0, width: 0, height: 0, bottom: 0, right: 0 });
+    const staleItem = e.doc.createElement('yt-list-item-view-model');
+    staleItem.textContent = '채널 추천 안함';
+    let staleClicked = false;
+    staleItem.addEventListener('click', () => { staleClicked = true; });
+    stale.appendChild(staleItem);
+    e.doc.body.appendChild(stale);
+
+    e.actionBtn().dispatchEvent(new e.win.MouseEvent('click', { bubbles: true }));
+    await sleep(400);
+    check('R19 닫힌 메뉴의 동일 항목은 건드리지 않음', staleClicked === false);
+    check('R20 열린 메뉴의 항목을 클릭', e.clicked.includes('채널 추천 안함'));
   }
 
   console.log(`\n${pass} passed, ${fail} failed`);
