@@ -54,13 +54,15 @@ tools/deploy.sh /path/to/extension
 
 ## 설치 방법 (압축해제된 확장 프로그램 로드)
 
-1. [Releases](https://github.com/backcho/youtube-shorts-blacklist/releases)에서 ZIP 파일을
-   내려받아 원하는 폴더에 압축을 해제합니다. (저장소를 `git clone` 해도 됩니다)
+1. [Releases](https://github.com/backcho/youtube-shorts-blacklist/releases)에서
+   `shorts-blocker-for-youtube-x.y.z.zip` 을 내려받아 원하는 폴더에 압축을 해제합니다.
 2. 크롬 브라우저를 열고 주소창에 `chrome://extensions/`를 입력하여 이동합니다.
 3. 우측 상단의 '개발자 모드' 스위치를 켜기(ON)로 변경합니다.
-4. 좌측 상단의 '압축해제된 확장 프로그램 로드' 버튼을 클릭합니다.
-5. 압축을 해제한 폴더 안의 **`src` 폴더**를 선택하면 설치가 완료됩니다.
-   저장소 루트가 아니라 `src` 입니다. `manifest.json` 이 그 안에 있습니다.
+4. 좌측 상단의 '압축해제된 확장 프로그램 로드' 버튼을 클릭하고,
+   압축을 해제한 폴더를 선택하면 설치가 완료됩니다.
+
+> 저장소를 `git clone` 하거나 릴리스의 `Source code` ZIP 을 받은 경우에는
+> 루트가 아니라 **`src` 폴더**를 선택하세요. `manifest.json` 이 그 안에 있습니다.
 
 ---
 
