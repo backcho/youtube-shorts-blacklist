@@ -36,6 +36,7 @@ npm install                 # 최초 1회 (jsdom)
 cp .env.sample .env         # 최초 1회, DEPLOY_TARGET 값을 채웁니다
 npm test                    # 회귀 테스트 실행
 npm run deploy              # src/ 를 DEPLOY_TARGET 으로 복사
+npm run package             # 배포용 ZIP 을 dist/ 에 생성
 ```
 
 `DEPLOY_TARGET` 은 크롬 '압축해제된 확장 프로그램 로드'로 지정한 폴더입니다.

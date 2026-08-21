@@ -5,7 +5,8 @@
   "description": "유튜브 숏츠 채널 블랙리스트 크롬 확장",
   "scripts": {
     "test": "node tools/test/run-all.js",
-    "deploy": "bash tools/deploy.sh"
+    "deploy": "bash tools/deploy.sh",
+    "package": "bash tools/package.sh"
   },
   "devDependencies": {
     "jsdom": "^26.0.0"
